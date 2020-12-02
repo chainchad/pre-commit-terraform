@@ -85,19 +85,17 @@ terraform_validate_() {
 
       pushd "$(realpath "$path_uniq")" > /dev/null
 
-      if [[ ! -d .terraform ]]; then
-        set +e
-        init_output=$(terraform init -backend=false 2>&1)
-        init_code=$?
-        set -e
+      set +e
+      init_output=$(terraform init -backend=false 2>&1)
+      init_code=$?
+      set -e
 
-        if [[ $init_code != 0 ]]; then
-          error=1
-          echo "Init before validation failed: $path_uniq"
-          echo "$init_output"
-          popd > /dev/null
-          continue
-        fi
+      if [[ $init_code != 0 ]]; then
+        error=1
+        echo "Init before validation failed: $path_uniq"
+        echo "$init_output"
+        popd > /dev/null
+        continue
       fi
 
       set +e
