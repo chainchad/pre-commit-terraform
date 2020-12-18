@@ -77,7 +77,6 @@ terraform_validate_() {
     ((index += 1))
   done
 
-  rm /tmp/precommitlock_* || true
   local path_uniq
   for path_uniq in $(echo "${paths[*]}" | tr ' ' '\n' | sort -u); do
     path_uniq="${path_uniq//__REPLACED__SPACE__/ }"
@@ -102,7 +101,7 @@ terraform_validate_() {
         echo "Init before validation failed: $path_uniq"
         echo "$init_output"
         popd > /dev/null
-        rm $lock_file || true
+        rm $lock_file 2>&1 || true
         continue
       fi
 
@@ -119,7 +118,7 @@ terraform_validate_() {
       fi
 
       popd > /dev/null
-      rm $lock_file || true
+      rm $lock_file 2>&1 || true
     fi
   done
 
