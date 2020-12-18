@@ -77,6 +77,7 @@ terraform_validate_() {
     ((index += 1))
   done
 
+  rm /tmp/precommitlock_* || true
   local path_uniq
   for path_uniq in $(echo "${paths[*]}" | tr ' ' '\n' | sort -u); do
     path_uniq="${path_uniq//__REPLACED__SPACE__/ }"
