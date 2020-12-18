@@ -80,8 +80,14 @@ terraform_validate_() {
   local path_uniq
   for path_uniq in $(echo "${paths[*]}" | tr ' ' '\n' | sort -u); do
     path_uniq="${path_uniq//__REPLACED__SPACE__/ }"
-
     if [[ -n "$(find "$path_uniq" -maxdepth 1 -name '*.tf' -print -quit)" ]]; then
+
+      lock_file="/tmp/precommitlock_${path_uniq//\//-}"
+      if [[ -f $lock_file ]]; then
+        # Another thread is already processing this dir, skipping
+        continue
+      fi;
+      touch $lock_file
 
       pushd "$(realpath "$path_uniq")" > /dev/null
 
@@ -95,6 +101,7 @@ terraform_validate_() {
         echo "Init before validation failed: $path_uniq"
         echo "$init_output"
         popd > /dev/null
+        rm $lock_file || true
         continue
       fi
 
@@ -111,6 +118,7 @@ terraform_validate_() {
       fi
 
       popd > /dev/null
+      rm $lock_file || true
     fi
   done
 
