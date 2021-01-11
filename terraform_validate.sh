@@ -56,6 +56,9 @@ parse_cmdline_() {
 
 terraform_validate_() {
 
+  rm -rf /tmp/precommitlock
+  mkdir -p /tmp/precommitlock
+
   # Setup environment variables
   local var var_name var_value
   for var in "${ENVS[@]}"; do
@@ -78,8 +81,6 @@ terraform_validate_() {
   done
 
   local path_uniq
-  rm -rf /tmp/precommitlock
-  mkdir -p /tmp/precommitlock
   for path_uniq in $(echo "${paths[*]}" | tr ' ' '\n' | sort -u); do
     path_uniq="${path_uniq//__REPLACED__SPACE__/ }"
     if [[ -n "$(find "$path_uniq" -maxdepth 1 -name '*.tf' -print -quit)" ]]; then
@@ -121,6 +122,7 @@ terraform_validate_() {
       popd > /dev/null
     fi
   done
+  rm -rf /tmp/precommitlock
 
   if [[ $error -ne 0 ]]; then
     exit 1
