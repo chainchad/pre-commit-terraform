@@ -58,7 +58,7 @@ terraform_validate_() {
 
   rm -rf /tmp/precommitlock
   mkdir -p /tmp/precommitlock
-  sleep 1s
+  sleep 500m
 
   # Setup environment variables
   local var var_name var_value
