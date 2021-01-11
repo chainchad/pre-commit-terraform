@@ -58,6 +58,7 @@ terraform_validate_() {
 
   rm -rf /tmp/precommitlock
   mkdir -p /tmp/precommitlock
+  sleep 1s
 
   # Setup environment variables
   local var var_name var_value
@@ -122,7 +123,6 @@ terraform_validate_() {
       popd > /dev/null
     fi
   done
-  rm -rf /tmp/precommitlock
 
   if [[ $error -ne 0 ]]; then
     exit 1
