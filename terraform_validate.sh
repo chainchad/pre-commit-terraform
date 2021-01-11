@@ -103,7 +103,6 @@ terraform_validate_() {
         echo "Init before validation failed: $path_uniq"
         echo "$init_output"
         popd > /dev/null
-        rm $lock_file 2>&1 || true
         continue
       fi
 
@@ -120,7 +119,6 @@ terraform_validate_() {
       fi
 
       popd > /dev/null
-      rm $lock_file 2>&1 || true
     fi
   done
 
