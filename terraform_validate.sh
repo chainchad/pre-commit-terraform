@@ -109,7 +109,7 @@ terraform_validate_() {
       fi
 
       set +e
-      validate_output=$(terraform validate "${ARGS[@]}" 2>&1)
+      validate_output=$(terraform validate "${ARGS[@]}")
       validate_code=$?
       set -e
 
